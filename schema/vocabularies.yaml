@@ -1,0 +1,158 @@
+# ONE THERA INTELLIGENCE — Controlled Vocabularies
+#
+# 이 파일이 시스템의 진짜 엔진이다.
+# underlying_need와 human_motivation이 자유 텍스트였다면
+# 1,000개의 인사이트는 1,000개의 서로 다른 단어가 되어 교차 분석이 불가능해진다.
+#
+# 어휘 추가 규칙:
+#   - 기존 어휘로 80% 표현 가능하면 추가하지 않는다
+#   - 추가 시 반드시 정의 + 대표 예시를 함께 쓴다
+#   - 삭제는 금지. deprecated로만 표시한다 (과거 데이터가 끊어지므로)
+
+version: 1
+updated: 2026-08-25
+
+# ─────────────────────────────────────────────────────────────
+# UNDERLYING NEED — "무엇이 충족되지 않았는가"
+# 4개 층위. 하나의 인사이트는 보통 서로 다른 층위 2개를 갖는다.
+# ─────────────────────────────────────────────────────────────
+underlying_need:
+
+  functional:            # 기능적 — 문제 해결
+    - id: efficacy
+      def: 실제로 효과가 있기를 원함
+    - id: speed
+      def: 결과가 빨리 나타나기를 원함
+    - id: convenience
+      def: 물리적·시간적 노력의 감소
+    - id: simplification
+      def: 단계·제품 수의 축소
+    - id: compatibility
+      def: 민감·질환·타 제품과 충돌하지 않음
+    - id: durability
+      def: 효과의 지속과 안정성
+    - id: cost_efficiency
+      def: 지불 대비 결과
+
+  informational:         # 정보적 — 불확실성 해소
+    - id: discovery
+      def: 몰랐던 선택지의 발견
+    - id: verification
+      def: 주장이 사실인지 확인
+    - id: comprehension
+      def: 작용 원리의 이해
+    - id: personalization
+      def: 나에게 맞는지의 판별
+    - id: risk_reduction
+      def: 실패·부작용의 회피
+
+  emotional:             # 정서적 — 상태의 변화
+    - id: relief
+      def: 증상·불안으로부터의 해방
+    - id: control
+      def: 내 몸/삶에 대한 통제감
+    - id: hope
+      def: 나아질 것이라는 전망
+    - id: comfort
+      def: 감각적 안정과 위안
+    - id: self_care
+      def: 스스로를 돌보는 행위 자체의 보상
+
+  social_identity:       # 사회·정체성적 — 관계 속의 나
+    - id: belonging
+      def: 같은 문제를 가진 집단에의 소속
+    - id: status
+      def: 안목·수준의 표시
+    - id: self_expression
+      def: 정체성의 표현
+    - id: validation
+      def: 타인의 인정과 확인
+    - id: authenticity
+      def: 꾸미지 않음/진짜임의 추구
+
+# ─────────────────────────────────────────────────────────────
+# HUMAN MOTIVATION — "왜 인간이 그것을 원하는가"
+# need보다 한 층 깊다. 산업을 초월해 동일하게 나타나는 축이며,
+# 07.CROSS(cross-industry) 분석은 전적으로 이 축에서 이루어진다.
+# ─────────────────────────────────────────────────────────────
+human_motivation:
+  - id: uncertainty_reduction
+    def: 모르는 상태를 견디지 못함. 정보를 사서라도 확실해지려 함
+  - id: efficacy_proof
+    def: 증거를 본 뒤에만 믿음. 전후 사진·수치·논문에 반응
+  - id: effort_minimization
+    def: 같은 결과라면 더 적은 노력. 인지적 부하 회피 포함
+  - id: novelty
+    def: 새로움 자체에서 오는 각성과 보상
+  - id: social_proof
+    def: 다수가 하면 옳다고 판단하는 휴리스틱
+  - id: authority_trust
+    def: 전문가·제도의 권위에 판단을 위임 ★ OneThera 핵심 축
+  - id: autonomy
+    def: 내가 직접 판단하고 선택했다는 감각
+  - id: mastery
+    def: 배우고 잘하게 되는 과정에서 오는 만족
+  - id: identity_signaling
+    def: 선택을 통해 내가 누구인지 말함
+  - id: belonging_need
+    def: 같은 경험을 가진 사람들과 연결됨
+  - id: loss_aversion
+    def: 얻는 것보다 잃는 것을 크게 느낌. 부작용·낭비 회피
+  - id: ritual_comfort
+    def: 반복되는 행위 자체가 주는 안정
+  - id: transformation
+    def: 다른 사람이 될 수 있다는 서사에의 이끌림
+  - id: care_giving
+    def: 나 또는 타인을 돌보는 행위에서 오는 의미
+  - id: transparency_demand
+    def: 숨기지 않음을 요구. 불신의 시대적 표현
+  - id: escape_pleasure
+    def: 감각적 즐거움과 일시적 도피
+
+# ─────────────────────────────────────────────────────────────
+# TAXONOMY TAGS — 01_TAXONOMY.md와 1:1 대응
+# ─────────────────────────────────────────────────────────────
+tags:
+  "01": [01.BEAUTY, 01.NA, 01.KBEAUTY, 01.RETAIL, 01.MACRO]
+  "02": [02.NEEDS, 02.PAIN, 02.LANG, 02.BEHAV, 02.EMERGING]
+  "03": [03.ING, 03.FORM, 03.TEX, 03.FORMAT, 03.ROUTINE, 03.CLAIM]
+  "04": [04.BRAND, 04.LAUNCH, 04.PRICE, 04.POS, 04.WHITE]
+  "05": [05.DESIRE, 05.PSY, 05.BSCI, 05.ANTH, 05.PHIL, 05.CULT]
+  "06": [06.WORDS, 06.HOOK, 06.META, 06.CURIO, 06.PERSUADE]
+  "07": [07.WEAK, 07.EMERGING, 07.CROSS, 07.STRUCT]
+  "08": [08.PRODUCT, 08.BRAND, 08.CAMPAIGN, 08.NEED, 08.WHITE]
+
+# ─────────────────────────────────────────────────────────────
+# CROSS-INDUSTRY DOMAINS — 07.CROSS 태깅 시 사용
+# 뷰티 밖에서 같은 motivation이 나타나는 곳
+# ─────────────────────────────────────────────────────────────
+industries:
+  - beauty
+  - pharma_otc
+  - supplements
+  - food_beverage
+  - fitness_wellness
+  - mental_health
+  - finance
+  - fashion
+  - tech_devices
+  - home_care
+  - pet_care
+  - travel
+  - media_entertainment
+
+# ─────────────────────────────────────────────────────────────
+# ONETHERA ASSETS — onethera_relevance 판정 기준
+# 이 자산과 연결되지 않으면 "none"이 정답이다
+# ─────────────────────────────────────────────────────────────
+onethera_assets:
+  - id: pharmacist_expertise
+    def: 약사 면허 기반의 성분·상호작용·안전성 판단 권위
+  - id: clinical_credibility
+    def: 근거 기반 커뮤니케이션 능력
+  - id: formulation_access
+    def: 제형 개발·생산 접근성
+  - id: k_beauty_origin
+    def: 한국발 제형·속도·서사
+  - id: na_market_entry
+    def: 북미 시장 진입 포지션
