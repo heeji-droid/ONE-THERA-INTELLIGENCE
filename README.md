@@ -29,6 +29,7 @@
 | [`tools/validate.py`](tools/validate.py) | 스키마 + 어휘 + Tier 규칙 검증기 |
 | [`tools/converge.py`](tools/converge.py) | 수렴 분석 — 반복 신호 탐지와 기회 점수 계산 |
 | [`docs/opportunities/`](docs/opportunities/) | 08 기회 카드 보관소 (폐기분 포함) |
+| [`.github/workflows/validate.yml`](.github/workflows/validate.yml) | PR마다 스키마 동기화 + 인사이트 검증 자동 실행 |
 
 ---
 
