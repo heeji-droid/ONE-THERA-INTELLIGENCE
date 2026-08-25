@@ -18,7 +18,7 @@
 
 | 파일 | 역할 |
 |---|---|
-| [`01_TAXONOMY.md`](01_TAXONOMY.md) | 8개 도메인 · 40개 노드. 모든 인사이트가 붙는 좌표계 |
+| [`01_TAXONOMY.md`](01_TAXONOMY.md) | 8개 도메인 · 41개 노드. 모든 인사이트가 붙는 좌표계 |
 | [`02_SOURCE_TIERS.md`](02_SOURCE_TIERS.md) | Tier 1–4 출처 위계. **사실(fact)** 과 **신호(signal)** 의 분리 |
 | [`03_ATOMIC_INSIGHT.md`](03_ATOMIC_INSIGHT.md) | 자료 1건 → 원자 단위 9단계 분해 규격 |
 | [`04_SIGNAL_SCORING.md`](04_SIGNAL_SCORING.md) | 신호 강도 · 수렴(convergence) · 기회 점수 계산 |
