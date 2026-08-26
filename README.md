@@ -3,8 +3,13 @@
 > Not a research AI. An **intelligence system**.
 > `Research → Connect → Interpret → Predict → Recommend`
 
+**이 시스템은 자료를 기다리지 않는다. 스스로 돈다.**
+
+결핍을 찾고 → 수집하고 → 케이스로 남기고 → 수렴을 보고 → 기회를 낸다.
+사람의 질문은 루프를 멈추는 것이 아니라 **루프에 얹힌다** ([`06_AUTONOMOUS_LOOP.md`](06_AUTONOMOUS_LOOP.md)).
+
 수집으로 끝나는 시스템은 시간이 지나도 축적되지 않는다.
-이 레포는 모든 자료를 **Atomic Insight** 단위로 분해해 저장하고,
+모든 자료를 **Atomic Insight** 단위로 분해해 저장하고,
 수천 개가 쌓였을 때 기계가 스스로 물을 수 있게 만든다:
 
 > *"최근 12개월 동안 서로 다른 분야에서 반복적으로 나타나는 신호는 무엇인가?"*
@@ -23,27 +28,43 @@
 | [`03_ATOMIC_INSIGHT.md`](03_ATOMIC_INSIGHT.md) | 자료 1건 → 원자 단위 9단계 분해 규격 |
 | [`04_SIGNAL_SCORING.md`](04_SIGNAL_SCORING.md) | 신호 강도 · 수렴(convergence) · 기회 점수 계산 |
 | [`05_MOTIVATION_LIBRARY.md`](05_MOTIVATION_LIBRARY.md) | ★ 동기 라이브러리 5층 · 사실/해석의 분리 |
+| [`06_AUTONOMOUS_LOOP.md`](06_AUTONOMOUS_LOOP.md) | ★ 자율 순환 · 상시 비트 · 케이스 축적 · 질문 처리 |
 | [`schema/atomic_insight.schema.json`](schema/atomic_insight.schema.json) | 기계 검증용 JSON Schema |
 | [`schema/vocabularies.yaml`](schema/vocabularies.yaml) | 통제 어휘 (drive / mechanism / trigger / trust / outcome / need / tag). **교차 분석의 전제조건** |
 | [`prompts/`](prompts/) | 5단계 실행 프롬프트 |
 | [`data/insights/`](data/insights/) | Atomic Insight 저장소 (JSONL, append-only) |
 | [`tools/validate.py`](tools/validate.py) | 스키마 + 어휘 + Tier 규칙 검증기 |
 | [`tools/converge.py`](tools/converge.py) | 수렴 분석 — 반복 신호 탐지와 기회 점수 계산 |
+| [`tools/coverage.py`](tools/coverage.py) | 결핍 탐지 — **다음에 무엇을 수집할지 기계가 정한다** |
+| [`docs/cases/`](docs/cases/) | ★ 케이스 스터디 저장소 — 축적의 실체 |
 | [`docs/opportunities/`](docs/opportunities/) | 08 기회 카드 보관소 (폐기분 포함) |
 | [`.github/workflows/validate.yml`](.github/workflows/validate.yml) | PR마다 스키마 동기화 + 인사이트 검증 자동 실행 |
 
 ---
 
-## 5단계 파이프라인
+## 순환
 
 ```
-                                     prompts/
-[ 자료 ]  ──1. RESEARCH──────────▶  10_COLLECT.md      → Atomic Insight N개
-   │                                                      (data/insights/*.jsonl)
-   │      ──2. CONNECT────────────▶  20_CONNECT.md      → 반복·수렴 패턴
-   │      ──3. INTERPRET──────────▶  30_INTERPRET.md    → "왜 지금인가"
-   │      ──4. PREDICT────────────▶  40_PREDICT.md      → 12–36개월 전개 시나리오
-   └──────5. RECOMMEND───────────▶  50_OPPORTUNITY.md  → 08 OPPORTUNITY ★
+      ┌──────────────────────────────────────────────────────┐
+      ▼                                          prompts/    │
+ ① AGENDA      결핍을 찾는다 (coverage.py)  ──▶  05_AGENDA   │
+      │        "무엇이 비어 있는가"                           │
+      ▼                                                      │
+ ② SWEEP       스스로 수집한다              ──▶  10_COLLECT  │
+      │        Tier 4 → 1 순서로                              │
+      ▼                                                      │
+ ③ CASE        한 주제 = 한 케이스          ──▶  docs/cases/ │
+      │        빈손도 케이스다                                 │
+      ▼                                                      │
+ ④ CONNECT     누적 저장소 전체의 수렴      ──▶  20 · 30 · 40│
+      │                                                      │
+      ▼                                                      │
+ ⑤ OPPORTUNITY 또는 "아직 아님 + 이유"      ──▶  50_OPPORT.  │
+      │                                                      │
+      └──────────────────────────────────────────────────────┘
+                            ▲
+                     ⑥ ASK  │  사용자 질문 ──▶ 60_ASK
+                            │  저장소를 먼저 본다. 즉답하지 않는다
 ```
 
 각 단계는 **앞 단계의 산출물만** 입력으로 받는다.
@@ -88,23 +109,29 @@ Language intelligence→ 어떤 말로 욕망하게 만들 것인가
 
 ## 사용법
 
-`make all` 로 3·4단계를 한 번에 돌릴 수 있다.
+```bash
+# ① 무엇이 비어 있는가 — 사람이 주제를 정하지 않는다
+make agenda
+
+# ② 그 결핍을 메우는 방향으로 수집 → data/insights/ 에 append
+cat prompts/00_MASTER.md prompts/05_AGENDA.md     # 지시서 작성
+cat prompts/00_MASTER.md prompts/10_COLLECT.md    # 실제 수집
+
+# ③ 검증 — 규칙 위반은 저장 전에 막힌다
+make validate
+
+# ④ 수렴 — 누적 저장소 전체에서 반복 신호를 본다
+make converge
+
+# 전부 한 번에
+make all
+```
+
+질문이 있을 때도 같은 길로 간다:
 
 ```bash
-# 1. 수집 — 프롬프트를 AI에 넣고 자료를 분해시킨다
-cat prompts/10_COLLECT.md          # + 원자료 URL/텍스트
-
-# 2. 저장 — 산출된 JSON을 append
-cat new.jsonl >> data/insights/2026-q1.jsonl
-
-# 3. 검증 — 스키마·어휘·출처 규칙 위반 차단
-python3 tools/validate.py data/insights/*.jsonl
-
-# 4. 수렴 — 기계가 반복 신호를 먼저 찾는다
-python3 tools/converge.py data/insights/*.jsonl
-
-# 5. 해석 → 예측 → 기회
-cat prompts/00_MASTER.md prompts/20_CONNECT.md    # + converge 출력
+cat prompts/00_MASTER.md prompts/60_ASK.md        # + 질문
+# → 저장소를 먼저 뒤지고, 없으면 수집한 뒤, 답과 함께 저장소에 남긴다
 ```
 
 ---
@@ -134,3 +161,5 @@ cat prompts/00_MASTER.md prompts/20_CONNECT.md    # + converge 출력
 3. **숫자를 지어내지 않는다.** 확인 불가는 `verification_status: unverified`로 남긴다. 삭제도, 추정도 하지 않는다.
 4. **1개 출처 = 1개 기회는 금지.** 기회는 최소 3개 독립 출처 · 2개 이상 Tier에서 수렴할 때만 승격된다 ([`04_SIGNAL_SCORING.md`](04_SIGNAL_SCORING.md)).
 5. **08 없이 끝내지 않는다.** 모든 리서치는 실행 가능한 기회로 착지한다.
+6. **빈손을 감추지 않는다.** 못 찾았으면 케이스에 `empty`로 남긴다 — 그 기록이 다음 사이클의 중복 탐색을 막는다.
+7. **질문에 즉답하지 않는다.** 저장소를 거치지 않은 답은 축적되지 않는다.
