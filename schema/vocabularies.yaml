@@ -1,21 +1,162 @@
 # ONE THERA INTELLIGENCE — Controlled Vocabularies
 #
 # 이 파일이 시스템의 진짜 엔진이다.
-# underlying_need와 human_motivation이 자유 텍스트였다면
-# 1,000개의 인사이트는 1,000개의 서로 다른 단어가 되어 교차 분석이 불가능해진다.
+# 자유 텍스트였다면 인사이트 1,000개는 서로 비교 불가능한 단어 1,000개가 된다.
 #
 # 어휘 추가 규칙:
 #   - 기존 어휘로 80% 표현 가능하면 추가하지 않는다
-#   - 추가 시 반드시 정의 + 대표 예시를 함께 쓴다
+#   - 추가 시 반드시 정의를 함께 쓴다
 #   - 삭제는 금지. deprecated로만 표시한다 (과거 데이터가 끊어지므로)
 
-version: 1
-updated: 2026-08-25
+version: 2
+updated: 2026-08-26
+
+# ═══════════════════════════════════════════════════════════════════
+# HUMAN MOTIVATION LIBRARY — 5개 층위
+#
+#   질문:  사람은 왜 무언가를 원하는가
+#     ├─ 그 욕구는 소비에서 어떻게 나타나는가        → 01 DRIVES
+#     ├─ 어떤 심리적 메커니즘이 욕구를 행동으로 바꾸는가 → 02 MECHANISMS / 03 TRIGGERS
+#     └─ 브랜드는 어떻게 자극하거나 충족시키는가       → 04 TRUST / 05 OUTCOMES
+#
+# 핵심: 01(욕구)과 02–04(장치)를 절대 섞지 않는다.
+#   01은 변하지 않는다 → 교차산업·장기 분석의 축
+#   02–04는 브랜드가 조작하는 레버 → 실행의 축
+#   05는 소비자가 도달하려는 상태 → 약속의 축
+# ═══════════════════════════════════════════════════════════════════
 
 # ─────────────────────────────────────────────────────────────
-# UNDERLYING NEED — "무엇이 충족되지 않았는가"
-# 4개 층위. 하나의 인사이트는 보통 서로 다른 층위 2개를 갖는다.
+# 01 HUMAN DRIVES — 사람은 왜 무언가를 원하는가
+# 시대·문화가 바뀌어도 변하지 않는 층. 산업을 초월한다.
+# 07.CROSS(cross-industry) 분석은 전적으로 이 축에서 이루어진다.
 # ─────────────────────────────────────────────────────────────
+human_drive:
+  - id: security
+    def: 위협·손실·불확실로부터 자신과 삶을 지키려는 힘
+  - id: growth
+    def: 어제보다 나아지려는 힘. 개선·회복·향상
+  - id: autonomy
+    def: 내 삶과 몸을 내가 결정하려는 힘
+  - id: connection
+    def: 타인과 이어지고, 돌보고, 돌봄받으려는 힘
+  - id: identity_status
+    def: 내가 누구인지 규정하고 그것을 인정받으려는 힘
+  - id: exploration
+    def: 새로운 것을 찾고 알아내려는 힘
+  - id: pleasure_relief
+    def: 즐거움을 얻고 고통·불편을 줄이려는 힘
+
+# ─────────────────────────────────────────────────────────────
+# 02 PSYCHOLOGICAL MECHANISMS — 욕구를 행동으로 전환시키는 인지 구조
+# 사람 안에서 작동한다. 브랜드가 만드는 것이 아니라 이용하는 것이다.
+# ─────────────────────────────────────────────────────────────
+psychological_mechanism:
+  - id: uncertainty_reduction
+    def: 모르는 상태를 견디지 못해 정보를 구하고 확실성에 지불함
+  - id: curiosity_gap
+    def: 아는 것과 모르는 것 사이의 틈이 주의를 강제로 붙듦
+  - id: loss_aversion
+    def: 얻는 것보다 잃는 것을 크게 느낌. 부작용·낭비 회피
+  - id: social_proof
+    def: 다수가 하면 옳다고 판단하는 휴리스틱
+  - id: authority
+    def: 전문가·제도의 권위에 판단을 위임함 ★ OneThera 핵심 축
+  - id: effort_minimization
+    def: 같은 결과라면 더 적은 노력. 인지적 부하 회피 포함
+  - id: cognitive_fluency
+    def: 이해하기 쉬운 것을 더 참되고 안전하다고 느낌
+  - id: anchoring
+    def: 처음 접한 기준값이 이후의 모든 판단을 끌어당김
+  - id: commitment_consistency
+    def: 이미 한 선택과 일관되게 행동하려 함
+  - id: reciprocity
+    def: 먼저 받으면 갚아야 한다고 느낌
+  - id: present_bias
+    def: 지금의 보상을 미래의 더 큰 보상보다 크게 평가함
+  - id: confirmation_bias
+    def: 이미 믿는 것을 확인해주는 정보만 선택적으로 받아들임
+  - id: status_quo_bias
+    def: 바꾸지 않는 것이 기본값. 전환에는 추가 이유가 필요함
+  - id: framing_effect
+    def: 같은 사실도 제시 방식에 따라 다르게 판단됨
+  - id: mere_exposure
+    def: 반복 노출 자체가 선호를 만듦
+  - id: peak_end
+    def: 경험의 기억은 절정과 마지막 순간으로 압축됨
+
+# ─────────────────────────────────────────────────────────────
+# 03 BEHAVIORAL TRIGGERS — 행동을 지금 일으키는 방아쇠
+# 브랜드가 설계하고 배치한다. 실행 레버.
+# ─────────────────────────────────────────────────────────────
+behavioral_trigger:
+  - id: novelty
+    def: 새로움 자체가 주는 각성
+  - id: scarcity
+    def: 수량·기회의 제한
+  - id: urgency
+    def: 시간의 제한
+  - id: contrast
+    def: 비교 대상을 옆에 두어 가치를 드러냄 (전후·경쟁·과거의 나)
+  - id: progress
+    def: 진척이 보이면 계속하게 됨
+  - id: personalization
+    def: 나에게 맞춰졌다는 신호
+  - id: ritual
+    def: 정해진 순서와 시간이 행위를 자동화함
+  - id: surprise
+    def: 예상을 벗어난 보상이 기억을 만듦
+  - id: cue_reminder
+    def: 환경 단서가 행동을 상기시킴 (용기·위치·알림)
+  - id: default_option
+    def: 기본값으로 설정된 것이 선택됨
+  - id: social_visibility
+    def: 남에게 보인다는 사실이 행동을 바꿈
+  - id: variable_reward
+    def: 불규칙한 보상이 반복을 강화함
+
+# ─────────────────────────────────────────────────────────────
+# 04 TRUST MECHANISMS — 믿게 만드는 방식
+# 뷰티에서 가장 빠르게 소모되는 자원. 그리고 OneThera가 가장 강한 층.
+# ─────────────────────────────────────────────────────────────
+trust_mechanism:
+  - id: evidence
+    def: 데이터·임상·시험 결과를 제시함
+  - id: expertise
+    def: 말하는 사람의 자격이 주장을 보증함
+  - id: transparency
+    def: 불리한 것까지 공개함
+  - id: specificity
+    def: 구체적 수치·조건이 막연한 주장보다 믿긴다
+  - id: consistency
+    def: 오래, 같은 말을 해왔다는 사실
+  - id: social_validation
+    def: 실제 사용자의 검증된 경험
+
+# ─────────────────────────────────────────────────────────────
+# 05 DESIRED OUTCOMES — 소비자가 도달하려는 상태
+# 제품이 약속하는 것. 06 LANGUAGE의 출발점.
+# ─────────────────────────────────────────────────────────────
+desired_outcome:
+  - id: transformation
+    def: 다른 사람이 된다
+  - id: relief
+    def: 증상·불안에서 벗어난다
+  - id: confidence
+    def: 내 선택이 옳다고 느낀다
+  - id: control
+    def: 내 몸과 상태를 통제한다
+  - id: belonging
+    def: 같은 사람들 사이에 속한다
+  - id: pleasure
+    def: 감각적으로 즐겁다
+  - id: mastery
+    def: 잘 다룰 줄 알게 된다
+
+# ═══════════════════════════════════════════════════════════════════
+# UNDERLYING NEED — 이 카테고리에서 지금 결핍된 것
+# 위 라이브러리가 "왜"라면, 이것은 "무엇이 없어서"다.
+# drive × need 조합이 제품 아이디어가 태어나는 좌표다.
+# ═══════════════════════════════════════════════════════════════════
 underlying_need:
 
   functional:            # 기능적 — 문제 해결
@@ -71,45 +212,6 @@ underlying_need:
       def: 꾸미지 않음/진짜임의 추구
 
 # ─────────────────────────────────────────────────────────────
-# HUMAN MOTIVATION — "왜 인간이 그것을 원하는가"
-# need보다 한 층 깊다. 산업을 초월해 동일하게 나타나는 축이며,
-# 07.CROSS(cross-industry) 분석은 전적으로 이 축에서 이루어진다.
-# ─────────────────────────────────────────────────────────────
-human_motivation:
-  - id: uncertainty_reduction
-    def: 모르는 상태를 견디지 못함. 정보를 사서라도 확실해지려 함
-  - id: efficacy_proof
-    def: 증거를 본 뒤에만 믿음. 전후 사진·수치·논문에 반응
-  - id: effort_minimization
-    def: 같은 결과라면 더 적은 노력. 인지적 부하 회피 포함
-  - id: novelty
-    def: 새로움 자체에서 오는 각성과 보상
-  - id: social_proof
-    def: 다수가 하면 옳다고 판단하는 휴리스틱
-  - id: authority_trust
-    def: 전문가·제도의 권위에 판단을 위임 ★ OneThera 핵심 축
-  - id: autonomy
-    def: 내가 직접 판단하고 선택했다는 감각
-  - id: mastery
-    def: 배우고 잘하게 되는 과정에서 오는 만족
-  - id: identity_signaling
-    def: 선택을 통해 내가 누구인지 말함
-  - id: belonging_need
-    def: 같은 경험을 가진 사람들과 연결됨
-  - id: loss_aversion
-    def: 얻는 것보다 잃는 것을 크게 느낌. 부작용·낭비 회피
-  - id: ritual_comfort
-    def: 반복되는 행위 자체가 주는 안정
-  - id: transformation
-    def: 다른 사람이 될 수 있다는 서사에의 이끌림
-  - id: care_giving
-    def: 나 또는 타인을 돌보는 행위에서 오는 의미
-  - id: transparency_demand
-    def: 숨기지 않음을 요구. 불신의 시대적 표현
-  - id: escape_pleasure
-    def: 감각적 즐거움과 일시적 도피
-
-# ─────────────────────────────────────────────────────────────
 # TAXONOMY TAGS — 01_TAXONOMY.md와 1:1 대응
 # ─────────────────────────────────────────────────────────────
 tags:
@@ -124,7 +226,7 @@ tags:
 
 # ─────────────────────────────────────────────────────────────
 # CROSS-INDUSTRY DOMAINS — 07.CROSS 태깅 시 사용
-# 뷰티 밖에서 같은 motivation이 나타나는 곳
+# 같은 human_drive가 뷰티 밖에서 나타나는 곳
 # ─────────────────────────────────────────────────────────────
 industries:
   - beauty

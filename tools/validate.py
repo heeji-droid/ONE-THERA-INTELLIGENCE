@@ -140,10 +140,24 @@ def rule_errors(rec: dict) -> tuple[list[str], list[str]]:
     if any(t.startswith("08.") for t in rec.get("tags", [])):
         errs.append("08.* tags are produced by convergence analysis, not assigned at capture")
 
-    # 해석이 섞인 observation
-    editorial = ("놀랍게도", "급성장", "폭발적", "explosive", "surprisingly", "massive")
-    if any(k in rec.get("observation", "").lower() for k in editorial):
-        warns.append("`observation` contains interpretation — keep it to the bare fact")
+    # 사실과 해석의 분리 — 이 시스템의 가장 중요한 규칙
+    obs = rec.get("observation", "").lower()
+    editorial = ("놀랍게도", "급성장", "폭발적", "주목할", "인상적",
+                 "explosive", "surprisingly", "massive", "remarkable", "notably")
+    causal = ("때문에", "따라서", "시사한다", "의미한다", "보여준다",
+              "suggests", "indicates", "implies", "means that", "shows that",
+              "driven by", "due to", "because")
+    hit = [k for k in editorial + causal if k in obs]
+    if hit:
+        errs.append(
+            f"FACT/INTERPRETATION: `observation` contains interpretation ({', '.join(hit)}) — "
+            "observation holds only what the source states; move the reasoning to "
+            "`consumer_behavior` and record how sure you are in `inference_strength`")
+
+    # 해석 필드가 있으면 그 확신도를 밝혀야 한다
+    if rec.get("consumer_behavior") and "inference_strength" not in rec:
+        warns.append("no `inference_strength` — state how sure the interpretation is, "
+                     "separately from `confidence` (which rates the fact)")
 
     return errs, warns
 

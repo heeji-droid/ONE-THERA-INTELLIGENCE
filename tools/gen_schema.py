@@ -14,7 +14,11 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 VOCAB = yaml.safe_load((ROOT / "schema" / "vocabularies.yaml").read_text())
 
 needs = [n["id"] for layer in VOCAB["underlying_need"].values() for n in layer]
-motivations = [m["id"] for m in VOCAB["human_motivation"]]
+drives = [d["id"] for d in VOCAB["human_drive"]]
+mechanisms = [m["id"] for m in VOCAB["psychological_mechanism"]]
+triggers = [t["id"] for t in VOCAB["behavioral_trigger"]]
+trusts = [t["id"] for t in VOCAB["trust_mechanism"]]
+outcomes = [o["id"] for o in VOCAB["desired_outcome"]]
 tags = [t for group in VOCAB["tags"].values() for t in group]
 assets = [a["id"] for a in VOCAB["onethera_assets"]] + ["none"]
 
@@ -28,7 +32,7 @@ schema = {
     "required": [
         "id", "captured_at", "source", "evidence_class", "verification_status",
         "observation", "consumer_behavior", "category",
-        "underlying_need", "human_motivation", "onethera_relevance",
+        "underlying_need", "human_drive", "desired_outcome", "onethera_relevance",
         "tags", "confidence",
     ],
     "properties": {
@@ -72,9 +76,30 @@ schema = {
             "items": {"enum": needs},
         },
         "related_signal": {"type": "array", "items": {"type": "string"}},
-        "human_motivation": {
-            "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": True,
-            "items": {"enum": motivations},
+        "human_drive": {
+            "type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": True,
+            "items": {"enum": drives},
+            "description": "01 왜 원하는가 — 변하지 않는 층. 교차산업 분석의 축",
+        },
+        "psychological_mechanism": {
+            "type": "array", "maxItems": 3, "uniqueItems": True,
+            "items": {"enum": mechanisms},
+            "description": "02 욕구를 행동으로 바꾸는 인지 구조",
+        },
+        "behavioral_trigger": {
+            "type": "array", "maxItems": 3, "uniqueItems": True,
+            "items": {"enum": triggers},
+            "description": "03 지금 행동하게 만든 방아쇠",
+        },
+        "trust_mechanism": {
+            "type": "array", "maxItems": 3, "uniqueItems": True,
+            "items": {"enum": trusts},
+            "description": "04 무엇이 믿게 만들었는가",
+        },
+        "desired_outcome": {
+            "type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": True,
+            "items": {"enum": outcomes},
+            "description": "05 도달하려는 상태 — 제품이 약속하는 것",
         },
         "cross_industry": {
             "type": "array",
@@ -88,12 +113,21 @@ schema = {
             "type": "array", "minItems": 1, "maxItems": 4, "uniqueItems": True,
             "items": {"enum": tags},
         },
-        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "confidence": {
+            "type": "number", "minimum": 0, "maximum": 1,
+            "description": "사실성 — 이 observation이 실제로 그러한가",
+        },
+        "inference_strength": {
+            "type": "number", "minimum": 0, "maximum": 1,
+            "description": "해석의 확신도 — 사실에서 behavior/need/drive로 간 추론이 얼마나 단단한가. "
+                           "confidence와 절대 섞지 않는다: 확실한 사실에서 약한 해석이 나올 수 있다",
+        },
         "note": {"type": "string"},
     },
 }
 
 out = ROOT / "schema" / "atomic_insight.schema.json"
 out.write_text(json.dumps(schema, indent=2, ensure_ascii=False) + "\n")
-print(f"wrote {out.relative_to(ROOT)}  "
-      f"({len(needs)} needs, {len(motivations)} motivations, {len(tags)} tags)")
+print(f"wrote {out.relative_to(ROOT)}  ({len(drives)} drives, "
+      f"{len(mechanisms)} mechanisms, {len(triggers)} triggers, {len(trusts)} trust, "
+      f"{len(outcomes)} outcomes, {len(needs)} needs, {len(tags)} tags)")

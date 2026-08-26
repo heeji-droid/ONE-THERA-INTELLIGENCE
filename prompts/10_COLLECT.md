@@ -17,10 +17,16 @@
 
 ```
 1. 자료를 끝까지 읽는다
-2. "해석 없는 사실" 목록을 먼저 만든다        ← 여기서 형용사 금지
+2. "해석 없는 사실" 목록을 먼저 만든다        ← 형용사 금지, 인과어 금지
+     "때문에 · 시사한다 · suggests · driven by · 급성장"이 들어가면 검증기가 실패시킨다
 3. 각 사실마다 물어본다: 이것이 함의하는 행동은 무엇인가
 4. 그 행동 밑의 need를 통제 어휘에서 고른다     ← 자유 텍스트 금지
-5. 그 need 밑의 motivation을 통제 어휘에서 고른다
+5. 동기 라이브러리 5층을 각각 채운다 — 절대 한 층에 몰아넣지 않는다
+     drive     왜 원하는가 (7개 중 1–2)        ← 변하지 않는 층. 필수
+     mechanism 무엇이 행동으로 바꿨는가 (최대 3)
+     trigger   지금 행동하게 만든 방아쇠 (최대 3)
+     trust     무엇이 믿게 만들었는가 (최대 3)
+     outcome   도달하려는 상태 (7개 중 1–2)    ← 필수
 6. 같은 방향을 가리키는 기존 인사이트 id를 related_signal에 연결한다
 7. OneThera 자산과 만나는가? 아니면 "none"
 8. 후보 기회 문장을 쓴다 (여기서 확정하지 않는다)
@@ -57,7 +63,7 @@ Tier 1–2에서 나중에 확인된다. 순서를 뒤집으면 이미 아는 �
 ## OUTPUT — JSONL only
 
 ```json
-{"id":"AI-2026-0012","captured_at":"2026-08-25","source":{"name":"...","tier":2,"url":"...","locator":"p.4"},"evidence_class":"fact","verification_status":"unverified","observation":"...","consumer_behavior":"...","category":"...","geo":"NA","underlying_need":["..."],"human_motivation":["..."],"cross_industry":["..."],"onethera_relevance":"...","onethera_asset":["..."],"potential_opportunity":"...","tags":["02.PAIN","05.PSY"],"confidence":0.7,"note":"..."}
+{"id":"AI-2026-0012","captured_at":"2026-08-26","source":{"name":"...","tier":2,"url":"...","locator":"p.4"},"evidence_class":"fact","verification_status":"unverified","observation":"...","consumer_behavior":"...","category":"...","geo":"NA","underlying_need":["..."],"human_drive":["..."],"psychological_mechanism":["..."],"behavioral_trigger":["..."],"trust_mechanism":["..."],"desired_outcome":["..."],"cross_industry":["..."],"onethera_relevance":"...","onethera_asset":["..."],"potential_opportunity":"...","tags":["02.PAIN","05.PSY"],"confidence":0.7,"inference_strength":0.5,"note":"..."}
 ```
 
 - `id`는 `AI-YYYY-NNNN`, 기존 저장소의 마지막 번호 다음부터
@@ -79,6 +85,8 @@ python3 tools/validate.py data/insights/2026-q3.jsonl
 
 - [ ] `observation`에 형용사·부사가 없는가
 - [ ] Tier 3–4인데 `observation`에 수치를 넣지 않았는가
-- [ ] `need`와 `motivation`이 전부 통제 어휘 안에 있는가
+- [ ] `need`와 라이브러리 5층이 전부 통제 어휘 안에 있는가
+- [ ] `drive`(변하지 않는 것)와 `trigger`(브랜드가 배치한 것)를 혼동하지 않았는가
+- [ ] `confidence`(사실성)와 `inference_strength`(해석의 확신)를 따로 매겼는가
 - [ ] `onethera_relevance`가 억지가 아닌가 — 억지면 `"none"`
 - [ ] 같은 자료에서 나온 원자들이 서로 다른 need를 가리키는가 (전부 같다면 분해 실패)

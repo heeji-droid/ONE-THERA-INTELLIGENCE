@@ -15,7 +15,8 @@
     "consumer_behavior",
     "category",
     "underlying_need",
-    "human_motivation",
+    "human_drive",
+    "desired_outcome",
     "onethera_relevance",
     "tags",
     "confidence"
@@ -179,31 +180,105 @@
         "type": "string"
       }
     },
-    "human_motivation": {
+    "human_drive": {
       "type": "array",
       "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "security",
+          "growth",
+          "autonomy",
+          "connection",
+          "identity_status",
+          "exploration",
+          "pleasure_relief"
+        ]
+      },
+      "description": "01 왜 원하는가 — 변하지 않는 층. 교차산업 분석의 축"
+    },
+    "psychological_mechanism": {
+      "type": "array",
       "maxItems": 3,
       "uniqueItems": true,
       "items": {
         "enum": [
           "uncertainty_reduction",
-          "efficacy_proof",
-          "effort_minimization",
-          "novelty",
-          "social_proof",
-          "authority_trust",
-          "autonomy",
-          "mastery",
-          "identity_signaling",
-          "belonging_need",
+          "curiosity_gap",
           "loss_aversion",
-          "ritual_comfort",
-          "transformation",
-          "care_giving",
-          "transparency_demand",
-          "escape_pleasure"
+          "social_proof",
+          "authority",
+          "effort_minimization",
+          "cognitive_fluency",
+          "anchoring",
+          "commitment_consistency",
+          "reciprocity",
+          "present_bias",
+          "confirmation_bias",
+          "status_quo_bias",
+          "framing_effect",
+          "mere_exposure",
+          "peak_end"
         ]
-      }
+      },
+      "description": "02 욕구를 행동으로 바꾸는 인지 구조"
+    },
+    "behavioral_trigger": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "novelty",
+          "scarcity",
+          "urgency",
+          "contrast",
+          "progress",
+          "personalization",
+          "ritual",
+          "surprise",
+          "cue_reminder",
+          "default_option",
+          "social_visibility",
+          "variable_reward"
+        ]
+      },
+      "description": "03 지금 행동하게 만든 방아쇠"
+    },
+    "trust_mechanism": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "evidence",
+          "expertise",
+          "transparency",
+          "specificity",
+          "consistency",
+          "social_validation"
+        ]
+      },
+      "description": "04 무엇이 믿게 만들었는가"
+    },
+    "desired_outcome": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "transformation",
+          "relief",
+          "confidence",
+          "control",
+          "belonging",
+          "pleasure",
+          "mastery"
+        ]
+      },
+      "description": "05 도달하려는 상태 — 제품이 약속하는 것"
     },
     "cross_industry": {
       "type": "array",
@@ -300,7 +375,14 @@
     "confidence": {
       "type": "number",
       "minimum": 0,
-      "maximum": 1
+      "maximum": 1,
+      "description": "사실성 — 이 observation이 실제로 그러한가"
+    },
+    "inference_strength": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "해석의 확신도 — 사실에서 behavior/need/drive로 간 추론이 얼마나 단단한가. confidence와 절대 섞지 않는다: 확실한 사실에서 약한 해석이 나올 수 있다"
     },
     "note": {
       "type": "string"

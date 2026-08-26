@@ -14,7 +14,7 @@
 
 ```bash
 python3 tools/converge.py --json data/insights/*.jsonl > clusters.json
-python3 tools/converge.py --by motivation+need --min-members 3 data/insights/*.jsonl
+python3 tools/converge.py --by drive+need --min-members 3 data/insights/*.jsonl
 ```
 
 기계는 **점수**를 준다. 사람(AI)은 **의미**를 준다.
@@ -26,7 +26,7 @@ python3 tools/converge.py --by motivation+need --min-members 3 data/insights/*.j
 
 ### 1. 클러스터 읽기
 `converge.py`가 낸 각 클러스터에 대해:
-- 어떤 **동기(motivation)** 로 묶였는가
+- 어떤 **drive(변하지 않는 욕구)** 로 묶였는가 — 장치가 아니라 욕구로 묶였는지 확인한다
 - 몇 개의 **독립 출처**, 몇 개의 **Tier**, 몇 개의 **산업**에서 왔는가
 - 게이트를 통과했는가 / 무엇이 막고 있는가
 
@@ -42,14 +42,17 @@ python3 tools/converge.py --by motivation+need --min-members 3 data/insights/*.j
 
 **이 시스템의 가장 큰 가치가 여기서 나온다.**
 
-같은 `human_motivation`이 뷰티 밖에서도 관찰되는지 확인한다:
+같은 `human_drive`가 뷰티 밖에서도 관찰되는지 확인한다. **drive로만 비교한다** —
+장치(mechanism/trigger)는 산업마다 다르게 구현되므로 그것으로 비교하면 연결이 보이지 않는다.
 
 ```
-uncertainty_reduction  → skincare / supplements / finance / mental_health
-effort_minimization    → routine 축소 / 구독 해지 / 미니멀 재테크
-transparency_demand    → 성분 공개 / 수수료 공개 / 알고리즘 공개
-authority_trust        → 약사 / 전문의 콘텐츠 / 자격 기반 크리에이터
+security   → 성분 부작용 회피 / 원금 보장 상품 / 보험 가입 / 알레르기 표시
+autonomy   → 루틴 축소 / 구독 해지 / 셀프 진단 / 직접 투자
+exploration→ 신제품 발견 / 여행 / 취미 입문
+connection → 같은 피부고민 커뮤니티 / 러닝 크루 / 육아 카페
 ```
+
+같은 drive가 3개 이상 산업에서 관찰되면 `07.CROSS`, 촉발 요인이 규제·인구·기술이면 `07.STRUCT`.
 
 **한 산업의 트렌드는 유행이고, 세 산업의 동일 동기는 구조다.**
 후자를 찾으면 `07.CROSS` 또는 `07.STRUCT`로 태깅할 근거가 된다.
@@ -59,7 +62,8 @@ authority_trust        → 약사 / 전문의 콘텐츠 / 자격 기반 크리�
 **있어야 하는데 없는 것**을 찾는다. 이것이 White Space의 원료다.
 - Tier 4는 시끄러운데 Tier 3(업계지)이 조용한 주제
 - 소비자가 매번 말하는데 어떤 브랜드도 이름 붙이지 않은 문제
-- 통제 어휘 중 저장소에 거의 등장하지 않는 need — 수집의 사각지대인가, 진짜 공백인가
+- 통제 어휘 중 저장소에 거의 등장하지 않는 drive/need — 수집의 사각지대인가, 진짜 공백인가
+- Tier 4는 많은데 Tier 1–2가 비어 있는 drive — 아직 아무도 근거를 대지 않은 욕구
 
 ### 5. 모순 기록
 

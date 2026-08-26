@@ -23,7 +23,8 @@
         ↓
 6. Related signal      같은 방향을 가리키는 다른 신호
         ↓
-7. Human motivation    왜 인간이 그것을 원하는가 (통제 어휘)
+7. Motivation library  왜 원하는가 + 무엇이 그것을 행동으로 바꾸는가
+                        drive / mechanism / trigger / trust / outcome (5층)
         ↓
 8. OneThera relevance  우리의 자산(약사 전문성)과 어떻게 만나는가
         ↓
@@ -33,6 +34,12 @@
 **5·7번이 이 시스템의 심장이다.**
 1~4는 누구나 수집한다. 5·7이 통제 어휘로 정규화되어 있기 때문에
 서로 다른 산업·카테고리·시점의 인사이트가 **같은 축에서 비교**된다.
+
+그리고 7번은 한 덩어리가 아니라 **5개 층으로 나뉜다** — 욕구(변하지 않는 것)와
+장치(브랜드가 조작하는 것)를 섞지 않기 위해서다. → [`05_MOTIVATION_LIBRARY.md`](05_MOTIVATION_LIBRARY.md)
+
+동시에 1~2번(사실)과 3번 이후(해석)는 **넘어갈 수 없는 경계**로 나뉜다.
+`observation`에 해석어가 들어가면 검증기가 실패시킨다. 경고가 아니라 오류다.
 
 ---
 
@@ -58,8 +65,11 @@
   "category": "beauty / skincare",
   "geo": "NA",
   "underlying_need": ["convenience", "discovery"],
+  "human_drive": ["exploration"],
+  "psychological_mechanism": ["social_proof", "effort_minimization"],
+  "behavioral_trigger": ["novelty", "personalization"],
+  "desired_outcome": ["confidence"],
   "related_signal": ["TikTok Shop GMV growth", "social commerce"],
-  "human_motivation": ["novelty", "social_proof", "effort_minimization"],
   "onethera_relevance": "Pharmacist expertise를 digital discovery 경험과 결합",
   "potential_opportunity": "Pharmacist-curated skincare discovery",
   "tags": ["01.RETAIL", "02.BEHAV", "07.EMERGING"],
@@ -79,7 +89,10 @@
   "observation": "Online growth outpaces total category growth",
   "consumer_behavior": "구매 전 검색·검증 단계가 길어지고 채널 밖에서 완결됨",
   "underlying_need": ["risk_reduction", "verification"],
-  "human_motivation": ["uncertainty_reduction", "efficacy_proof"],
+  "human_drive": ["security"],
+  "psychological_mechanism": ["uncertainty_reduction"],
+  "trust_mechanism": ["evidence", "expertise"],
+  "desired_outcome": ["confidence"],
   "onethera_relevance": "약사의 역할이 '판매'가 아니라 '검증'으로 재정의될 수 있음",
   "potential_opportunity": "Proof-first product page — 성분 근거를 구매 경로에 직접 배치",
   "tags": ["02.PAIN", "05.PSY", "06.PERSUADE"]
@@ -109,11 +122,16 @@
 | `category` | ✅ | 자유 텍스트 + `geo` |
 | `underlying_need` | ✅ | **통제 어휘**에서만 (1–3개) |
 | `related_signal` | | 다른 인사이트 `id` 또는 서술 |
-| `human_motivation` | ✅ | **통제 어휘**에서만 (1–3개) |
+| `human_drive` | ✅ | **통제 어휘** 7개 중 1–2개. 클러스터링의 기본 키 |
+| `desired_outcome` | ✅ | **통제 어휘** 7개 중 1–2개. 도달하려는 상태 |
+| `psychological_mechanism` | | 최대 3개. 욕구를 행동으로 바꾼 인지 구조 |
+| `behavioral_trigger` | | 최대 3개. 지금 행동하게 만든 방아쇠 |
+| `trust_mechanism` | | 최대 3개. 무엇이 믿게 만들었는가 |
 | `onethera_relevance` | ✅ | 우리 자산과의 접점. 없으면 `"none"` — 억지로 쓰지 않는다 |
 | `potential_opportunity` | | 후보 문장. **여기서 08이 확정되지 않는다** |
 | `tags` | ✅ | 택소노미 ID 1–4개. 첫 번째가 primary |
-| `confidence` | ✅ | 0–1. 아래 기준 |
+| `confidence` | ✅ | 0–1. **사실성** — observation이 실제로 그러한가 |
+| `inference_strength` | | 0–1. **해석의 확신도** — 사실에서 behavior/drive로 간 추론의 단단함. `confidence`와 별개 축 |
 | `note` | | 정의 범위, 방법론 한계, 반증 |
 
 ### confidence 기준
@@ -129,6 +147,10 @@
 **confidence는 신호의 가치가 아니라 사실성의 정도다.**
 confidence 0.3의 Reddit 신호가 confidence 0.9의 시장 규모보다 더 큰 기회를 만들 수 있다.
 
+그리고 `confidence`와 `inference_strength`는 **서로 다른 축이다.**
+NIQ 매출 수치는 사실성 0.65지만 거기서 "검증 단계가 길어졌다"로 가는 해석은 0.4다.
+Reddit 이탈 서사는 사실성 0.4지만 해석은 0.7이다 — 사실이 약해도 의미는 분명할 수 있다.
+
 ---
 
 ## 분해할 때의 금지 사항
@@ -136,5 +158,6 @@ confidence 0.3의 Reddit 신호가 confidence 0.9의 시장 규모보다 더 큰
 - ❌ 한 원자에 두 개의 사실 (→ 두 개로 쪼갠다)
 - ❌ `observation`에 해석·형용사 ("놀랍게도", "급성장하는")
 - ❌ 자료에 없는 수치 보완 (모르면 비운다)
-- ❌ `underlying_need`에 자유 텍스트 (통제 어휘 밖은 검증기가 차단)
+- ❌ `underlying_need` / 라이브러리 5층에 자유 텍스트 (통제 어휘 밖은 검증기가 차단)
+- ❌ `observation`에 "때문에 · 시사한다 · suggests · driven by" — 해석은 다음 띠에서
 - ❌ `onethera_relevance` 억지 연결 — 관련 없으면 `"none"`. 억지 연결이 쌓이면 저장소 전체가 오염된다

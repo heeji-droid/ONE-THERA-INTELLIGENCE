@@ -22,8 +22,9 @@
 | [`02_SOURCE_TIERS.md`](02_SOURCE_TIERS.md) | Tier 1–4 출처 위계. **사실(fact)** 과 **신호(signal)** 의 분리 |
 | [`03_ATOMIC_INSIGHT.md`](03_ATOMIC_INSIGHT.md) | 자료 1건 → 원자 단위 9단계 분해 규격 |
 | [`04_SIGNAL_SCORING.md`](04_SIGNAL_SCORING.md) | 신호 강도 · 수렴(convergence) · 기회 점수 계산 |
+| [`05_MOTIVATION_LIBRARY.md`](05_MOTIVATION_LIBRARY.md) | ★ 동기 라이브러리 5층 · 사실/해석의 분리 |
 | [`schema/atomic_insight.schema.json`](schema/atomic_insight.schema.json) | 기계 검증용 JSON Schema |
-| [`schema/vocabularies.yaml`](schema/vocabularies.yaml) | 통제 어휘 (need / motivation / tag). **교차 분석의 전제조건** |
+| [`schema/vocabularies.yaml`](schema/vocabularies.yaml) | 통제 어휘 (drive / mechanism / trigger / trust / outcome / need / tag). **교차 분석의 전제조건** |
 | [`prompts/`](prompts/) | 5단계 실행 프롬프트 |
 | [`data/insights/`](data/insights/) | Atomic Insight 저장소 (JSONL, append-only) |
 | [`tools/validate.py`](tools/validate.py) | 스키마 + 어휘 + Tier 규칙 검증기 |
@@ -61,7 +62,7 @@
 ✅ 이 시스템
 ```
 자료 1건 → Atomic Insight 3~8개
-각 인사이트는 need / motivation / tag / tier / date로 색인됨
+각 인사이트는 drive / need / mechanism / trigger / trust / outcome / tier / date로 색인됨
 → 1,000건이 쌓이면 "cross-industry에서 반복되는 욕구"가 자동으로 드러남
 ```
 
@@ -105,6 +106,24 @@ python3 tools/converge.py data/insights/*.jsonl
 # 5. 해석 → 예측 → 기회
 cat prompts/00_MASTER.md prompts/20_CONNECT.md    # + converge 출력
 ```
+
+---
+
+## 두 개의 분리 — 이 시스템의 전부
+
+```
+① 사실과 해석         무엇이 관찰되었는가  vs  그것이 무엇을 의미하는가
+                      confidence           vs  inference_strength
+
+② 욕구와 장치         사람이 왜 원하는가   vs  무엇이 그것을 행동으로 바꾸는가
+                      human_drive          vs  mechanism / trigger / trust
+```
+
+섞으면 정보에 위계가 생기지 않고, 위계가 없으면 인사이트가 나오지 않는다.
+그리고 낮은 신뢰도의 정보는 **버리지 않는다 — Tier 1 → 4 순으로 아래에 쌓는다.**
+숨기면 판단할 수 없고, 섞으면 오도된다.
+
+자세히 → [`05_MOTIVATION_LIBRARY.md`](05_MOTIVATION_LIBRARY.md)
 
 ---
 

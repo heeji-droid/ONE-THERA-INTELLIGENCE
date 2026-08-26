@@ -9,16 +9,21 @@
 
 ## 1. Signal Cluster — 무엇을 묶는가
 
-클러스터의 기본 키는 **`human_motivation`** 이다.
-카테고리나 브랜드가 아니라 **동기**로 묶어야 산업을 가로지르는 반복이 보인다.
+클러스터의 기본 키는 **`human_drive`** 다 ([`05_MOTIVATION_LIBRARY.md`](05_MOTIVATION_LIBRARY.md)의 01층).
+카테고리나 브랜드가 아니라 **변하지 않는 욕구**로 묶어야 산업을 가로지르는 반복이 보인다.
 
 ```
-기본:   human_motivation
-정밀:   human_motivation × underlying_need
+기본:   drive                    7개 축. 구조적 이동을 본다
+정밀:   drive × need             제품 아이디어가 태어나는 좌표
+대안:   drive × outcome | mechanism | trigger | trust
 ```
 
-같은 `uncertainty_reduction`이 skincare · supplements · finance에서 각각 관찰되었다면,
+같은 `security`가 skincare · supplements · finance에서 각각 관찰되었다면,
 그것은 세 개의 트렌드가 아니라 **하나의 구조적 이동**이다.
+
+> **장치(mechanism/trigger)로 묶지 않는 이유**: 그 층은 빠르게 변한다.
+> `scarcity`로 묶으면 "요즘 다들 한정판을 한다"는 관찰이 나오고, 그건 트렌드지 구조가 아니다.
+> 장치는 실행 단계(50_OPPORTUNITY)에서 레버로 쓴다.
 
 ---
 
@@ -63,6 +68,22 @@ G4  Tier 4 ≥ 1건          (근거만 있고 소비자 목소리가 없으면 
 
 > G3 없이 통과한 것은 **유행**이고, G4 없이 통과한 것은 **논문**이다.
 > 둘 다 제품이 아니다.
+
+### 게이트는 숨기지 않는다 — 층으로 쌓는다
+
+게이트는 **승격 여부**만 결정한다. 근거를 가리지 않는다.
+`converge.py`는 모든 클러스터에 대해 근거를 **Tier 1 → 4 순으로 전부 출력**한다.
+Tier 4 하나뿐인 클러스터도 그 사실이 보이는 채로 아래에 남는다.
+
+```
+[Tier 1 · Primary/Official]      (fact)   ← 위
+[Tier 2 · High-quality Research] (fact)
+[Tier 3 · Industry Intelligence] (mixed)
+[Tier 4 · Consumer Signal]       (signal) ← 아래, 그러나 삭제되지 않음
+```
+
+각 근거는 `FACT` 줄과 `INFER [강도]` 줄로 나뉘어 출력된다.
+**무엇이 관찰된 것이고 무엇이 우리의 해석인지 한눈에 구분된다.**
 
 ---
 
