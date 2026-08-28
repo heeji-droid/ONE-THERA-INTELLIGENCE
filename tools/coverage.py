@@ -29,7 +29,15 @@ STALE_DAYS = 120        # 이 기간 넘게 갱신 안 된 drive는 신선도 �
 THIN = 3                # drive당 최소 인사이트 수
 
 
-def load(patterns: list[str]) -> list[dict]:
+def is_seed(rec: dict) -> bool:
+    """규격 학습용 시드인가 — `tools/converge.py`의 판정과 같다.
+
+    시드의 tier 4 레코드가 결핍 계산에 섞이면 `no_consumer_voice`가 가려진다.
+    """
+    return rec.get("note", "").startswith("SEED EXAMPLE")
+
+
+def load(patterns: list[str], include_seeds: bool = False) -> list[dict]:
     recs = []
     for pattern in patterns:
         if any(ch in pattern for ch in "*?[") and not pathlib.Path(pattern).is_absolute():
@@ -39,8 +47,12 @@ def load(patterns: list[str]) -> list[dict]:
         for path in paths:
             for line in path.read_text().splitlines():
                 line = line.strip()
-                if line and not line.startswith("//"):
-                    recs.append(json.loads(line))
+                if not line or line.startswith("//"):
+                    continue
+                rec = json.loads(line)
+                if is_seed(rec) and not include_seeds:
+                    continue
+                recs.append(rec)
     return recs
 
 
@@ -114,9 +126,11 @@ def main() -> int:
     ap.add_argument("--agenda", action="store_true", help="수집 지시만 출력")
     ap.add_argument("--top", type=int, default=6, help="지시 개수")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--include-seeds", action="store_true",
+                    help="규격 학습용 시드(note가 'SEED EXAMPLE'로 시작)도 결핍 계산에 포함한다")
     args = ap.parse_args()
 
-    recs = load(args.files)
+    recs = load(args.files, include_seeds=args.include_seeds)
     if not recs:
         print("no insights found", file=sys.stderr)
         return 1

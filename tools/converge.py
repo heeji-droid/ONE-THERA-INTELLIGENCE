@@ -24,8 +24,18 @@ import sys
 RECENCY_MONTHS = 12
 
 
-def load(patterns: list[str]) -> list[dict]:
-    recs = []
+def is_seed(rec: dict) -> bool:
+    """규격 학습용 시드인가.
+
+    `data/insights/README.md`가 `0000-EXAMPLES.jsonl`을 "분석에서 제외해도 됨"으로
+    규정하고, 시드 레코드는 모두 `note`가 `SEED EXAMPLE`로 시작한다.
+    시드의 수치(`n_observed` 등)는 예시값이므로 게이트 판정의 근거가 될 수 없다.
+    """
+    return rec.get("note", "").startswith("SEED EXAMPLE")
+
+
+def load(patterns: list[str], include_seeds: bool = False) -> tuple[list[dict], int]:
+    recs, skipped = [], 0
     for pattern in patterns:
         if any(ch in pattern for ch in "*?[") and not pathlib.Path(pattern).is_absolute():
             paths = sorted(pathlib.Path().glob(pattern))
@@ -34,9 +44,14 @@ def load(patterns: list[str]) -> list[dict]:
         for path in paths:
             for line in path.read_text().splitlines():
                 line = line.strip()
-                if line and not line.startswith("//"):
-                    recs.append(json.loads(line))
-    return recs
+                if not line or line.startswith("//"):
+                    continue
+                rec = json.loads(line)
+                if is_seed(rec) and not include_seeds:
+                    skipped += 1
+                    continue
+                recs.append(rec)
+    return recs, skipped
 
 
 SIMPLE_KEYS = {
@@ -169,9 +184,12 @@ def main() -> int:
     ap.add_argument("--min-score", type=float, default=0.0)
     ap.add_argument("--min-members", type=int, default=2)
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--include-seeds", action="store_true",
+                    help="규격 학습용 시드(note가 'SEED EXAMPLE'로 시작)도 클러스터에 포함한다. "
+                         "시드의 수치는 예시값이므로 기본값은 제외다")
     args = ap.parse_args()
 
-    recs = load(args.files)
+    recs, skipped = load(args.files, include_seeds=args.include_seeds)
     if not recs:
         print("no insights found", file=sys.stderr)
         return 1
@@ -197,6 +215,8 @@ def main() -> int:
         return 0
 
     print(f"corpus: {len(recs)} insights · horizon {horizon} · grouped by {args.by}")
+    if skipped:
+        print(f"시드 {skipped}건 제외 (규격 예시 — 포함하려면 --include-seeds)")
     print(f"{len(ranked)} cluster(s) with ≥{args.min_members} members\n")
     for key, c in ranked:
         gate = "PASS" if c["gate_passed"] else "blocked: " + ", ".join(
