@@ -1,4 +1,4 @@
-.PHONY: all schema validate strict converge coverage agenda payload
+.PHONY: all schema validate strict converge coverage agenda payload viewer
 
 all: schema validate converge coverage
 
@@ -22,3 +22,6 @@ agenda:          ## 다음 수집 지시 — 무엇을 볼지 기계가 정한�
 
 payload:         ## 뷰어(desk artifact)가 읽는 payload.json 생성 — 시드 제외, 도구와 같은 계산
 	python3 tools/build_payload.py -o payload.json
+
+viewer:          ## 뷰어 HTML 생성 — viewer/desk.template.html + 최신 payload
+	python3 tools/render_viewer.py -o desk.html
