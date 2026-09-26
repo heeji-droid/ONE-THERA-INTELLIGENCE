@@ -14,6 +14,7 @@ import pathlib
 import re
 import subprocess
 import sys
+import tempfile
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 TEMPLATE = REPO / "viewer" / "desk.template.html"
@@ -29,12 +30,14 @@ def main() -> int:
     if args.payload:
         payload = pathlib.Path(args.payload).read_text(encoding="utf-8")
     else:
-        payload = subprocess.run(
-            [sys.executable, str(REPO / "tools" / "build_payload.py"), "-o", "/dev/stdout"],
-            capture_output=True, text=True, cwd=REPO, check=True,
-        ).stdout
-        # build_payload 는 마지막에 요약 한 줄을 stderr 가 아니라 stdout 에 찍지 않는다
-        payload = payload.strip()
+        # build_payload 는 요약 한 줄을 stdout 에 찍는다. 파일로 받아야 JSON 만 남는다
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_payload = pathlib.Path(tmp) / "payload.json"
+            subprocess.run(
+                [sys.executable, str(REPO / "tools" / "build_payload.py"), "-o", str(tmp_payload)],
+                capture_output=True, text=True, cwd=REPO, check=True,
+            )
+            payload = tmp_payload.read_text(encoding="utf-8")
 
     json.loads(payload)  # 깨진 payload 를 발행하지 않는다
     if "</script" in payload:
