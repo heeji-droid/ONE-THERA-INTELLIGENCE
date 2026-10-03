@@ -1,0 +1,435 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Thera Intelligence Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F4F7F5; --panel:#FFFFFF; --sunk:#EAEFEB;
+  --ink:#0F1A16; --ink-2:#3D4C46; --ink-3:#6F7F78;
+  --rule:#DCE4DF; --rule-2:#C6D2CB;
+  --fact:#14584C; --fact-soft:#E4EFEB;
+  --signal:#A2611A; --signal-soft:#F6ECDD;
+  --t1:#0E3F37; --t2:#2C6D60; --t3:#6E9C90; --t4:#A2611A;
+  --alarm:#9C2E22;
+  --shadow:0 1px 2px rgba(15,26,22,.05), 0 8px 24px -16px rgba(15,26,22,.28);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1310; --panel:#131C18; --sunk:#0A100D;
+    --ink:#E8EFEA; --ink-2:#A9BAB2; --ink-3:#7A8B84;
+    --rule:#243029; --rule-2:#33453B;
+    --fact:#6FC3AE; --fact-soft:#14261F;
+    --signal:#D79A4C; --signal-soft:#241A0E;
+    --t1:#8FDCC6; --t2:#5FB5A0; --t3:#3E8375; --t4:#D79A4C;
+    --alarm:#E4796A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1310; --panel:#131C18; --sunk:#0A100D;
+  --ink:#E8EFEA; --ink-2:#A9BAB2; --ink-3:#7A8B84;
+  --rule:#243029; --rule-2:#33453B;
+  --fact:#6FC3AE; --fact-soft:#14261F;
+  --signal:#D79A4C; --signal-soft:#241A0E;
+  --t1:#8FDCC6; --t2:#5FB5A0; --t3:#3E8375; --t4:#D79A4C;
+  --alarm:#E4796A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font:400 15px/1.6 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; margin:0;
+}
+.wrap{max-width:1160px; margin:0 auto; padding:40px 28px 96px; display:flex; flex-direction:column; gap:44px}
+h1,h2,h3{margin:0; text-wrap:balance}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+
+/* ── masthead ─────────────────────────────── */
+.mast{display:flex; flex-direction:column; gap:18px; border-bottom:2px solid var(--ink); padding-bottom:20px}
+.mast .kicker{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-3); display:flex; gap:14px; flex-wrap:wrap
+}
+.mast h1{font-family:Newsreader,Georgia,serif; font-size:clamp(34px,5vw,50px); font-weight:500; line-height:1.05; letter-spacing:-.02em}
+.mast p{margin:0; max-width:62ch; color:var(--ink-2); font-size:16px}
+.stats{display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--rule); border-radius:3px; background:var(--panel); overflow:hidden}
+.stat{padding:14px 20px; flex:1 1 130px; border-right:1px solid var(--rule)}
+.stat:last-child{border-right:0}
+.stat b{display:block; font-family:"IBM Plex Mono",monospace; font-size:26px; font-weight:500; line-height:1.1; font-variant-numeric:tabular-nums}
+.stat span{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); font-family:"IBM Plex Mono",monospace}
+
+section{display:flex; flex-direction:column; gap:16px}
+.sechead{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; border-bottom:1px solid var(--rule-2); padding-bottom:8px}
+.sechead h2{font-family:Newsreader,Georgia,serif; font-size:25px; font-weight:500; letter-spacing:-.01em}
+.sechead .note{color:var(--ink-3); font-size:13px; max-width:56ch}
+
+/* ── coverage matrix ──────────────────────── */
+.scroll{overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--panel)}
+table{border-collapse:collapse; width:100%; min-width:660px; font-size:14px}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule)}
+thead th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-3); font-weight:500;
+  background:var(--sunk); border-bottom:1px solid var(--rule-2); white-space:nowrap
+}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.blank td{color:var(--ink-3)}
+tbody tr.blank .drive-name{color:var(--alarm)}
+.drive-name{font-weight:600}
+.drive-def{display:block; font-size:12px; color:var(--ink-3); font-weight:400; margin-top:2px}
+.cell-n{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; text-align:center; width:44px}
+.pip{
+  display:inline-flex; align-items:center; justify-content:center; min-width:26px; height:22px;
+  border-radius:2px; font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500;
+  color:var(--panel);
+}
+.pip.zero{background:transparent; color:var(--ink-3); border:1px dashed var(--rule-2)}
+.pip.t1{background:var(--t1)} .pip.t2{background:var(--t2)}
+.pip.t3{background:var(--t3)} .pip.t4{background:var(--t4)}
+:root[data-theme="dark"] .pip:not(.zero),
+:root:not([data-theme="light"]) .pip:not(.zero){color:#0B120F}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .pip:not(.zero){color:#FFF}}
+.inds{font-size:12px; color:var(--ink-2)}
+
+/* ── weekly cases ─────────────────────────── */
+.cases{display:flex; flex-direction:column; border:1px solid var(--rule); border-radius:3px; background:var(--panel); overflow:hidden}
+.case{display:grid; grid-template-columns:96px 1fr 100px; gap:16px; padding:14px 16px; border-bottom:1px solid var(--rule); align-items:baseline; text-decoration:none; color:inherit}
+.case:last-child{border-bottom:0}
+.case:hover{background:var(--sunk)}
+.case .d{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3)}
+.case .t{font-size:14px; color:var(--ink); font-weight:600; display:block}
+.case .f{font-size:12.5px; color:var(--ink-2); display:block; margin-top:3px}
+.case .v{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--signal); text-align:right; white-space:nowrap}
+@media(max-width:640px){.case{grid-template-columns:1fr}.case .v{text-align:left}}
+
+/* ── agenda ───────────────────────────────── */
+.agenda{display:flex; flex-direction:column; border:1px solid var(--rule); border-radius:3px; background:var(--panel); overflow:hidden}
+.gap{display:grid; grid-template-columns:52px 150px 1fr; gap:16px; padding:13px 16px; border-bottom:1px solid var(--rule); align-items:start}
+.gap:last-child{border-bottom:0}
+.gap .pri{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:14px; color:var(--alarm)}
+.gap[data-p="mid"] .pri{color:var(--signal)}
+.gap[data-p="low"] .pri{color:var(--ink-3)}
+.gap .kind{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2)}
+.gap .txt{font-size:14px; color:var(--ink-2)}
+@media(max-width:640px){.gap{grid-template-columns:46px 1fr}.gap .kind{grid-column:2}.gap .txt{grid-column:1/-1}}
+
+/* ── clusters ─────────────────────────────── */
+.clusters{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.cluster{border:1px solid var(--rule); border-radius:3px; background:var(--panel); padding:20px; display:flex; flex-direction:column; gap:14px; box-shadow:var(--shadow)}
+.cluster h3{font-family:Newsreader,Georgia,serif; font-size:22px; font-weight:500}
+.cluster .score{display:flex; align-items:baseline; gap:10px}
+.cluster .score b{font-family:"IBM Plex Mono",monospace; font-size:32px; font-weight:500; line-height:1}
+.band{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--sunk); color:var(--ink-2)}
+.gates{display:flex; gap:6px; flex-wrap:wrap}
+.gate{font-family:"IBM Plex Mono",monospace; font-size:11px; padding:4px 8px; border-radius:2px; border:1px solid var(--rule-2); color:var(--ink-3)}
+.gate.pass{background:var(--fact-soft); border-color:var(--fact); color:var(--fact)}
+.gate.fail{background:transparent; border-color:var(--alarm); color:var(--alarm); font-weight:600}
+.verdict{font-size:13.5px; color:var(--ink-2); border-left:2px solid var(--rule-2); padding-left:12px}
+.verdict.blocked{border-left-color:var(--alarm)}
+
+/* ── filters ──────────────────────────────── */
+.filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.filters .lab{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-right:2px}
+button.chip{
+  font:500 12.5px/1 "IBM Plex Mono",monospace; padding:7px 11px; border-radius:2px; cursor:pointer;
+  background:var(--panel); color:var(--ink-2); border:1px solid var(--rule-2);
+}
+button.chip:hover{border-color:var(--ink-3)}
+button.chip[aria-pressed="true"]{background:var(--ink); color:var(--ground); border-color:var(--ink)}
+button.chip:focus-visible{outline:2px solid var(--fact); outline-offset:2px}
+
+/* ── insight cards ────────────────────────── */
+.cards{display:flex; flex-direction:column; gap:14px}
+.card{
+  border:1px solid var(--rule); border-radius:3px; background:var(--panel);
+  border-left:4px solid var(--t3); overflow:hidden; box-shadow:var(--shadow);
+}
+.card[data-tier="1"]{border-left-color:var(--t1)}
+.card[data-tier="2"]{border-left-color:var(--t2)}
+.card[data-tier="3"]{border-left-color:var(--t3)}
+.card[data-tier="4"]{border-left-color:var(--t4)}
+.card-top{display:flex; flex-wrap:wrap; gap:10px 14px; align-items:baseline; padding:13px 18px; border-bottom:1px solid var(--rule); background:var(--sunk)}
+.card-top .id{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3)}
+.card-top .src{font-weight:600; font-size:14px}
+.card-top .tier{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.07em; padding:2px 7px; border-radius:2px; border:1px solid currentColor}
+.card[data-tier="1"] .tier{color:var(--t1)} .card[data-tier="2"] .tier{color:var(--t2)}
+.card[data-tier="3"] .tier{color:var(--t3)} .card[data-tier="4"] .tier{color:var(--t4)}
+.card-top .unver{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--alarm)}
+.card-top .spacer{flex:1}
+.card-top .drive{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-2)}
+
+.bands{display:grid; grid-template-columns:1fr 1fr}
+@media(max-width:760px){.bands{grid-template-columns:1fr}}
+.b{padding:16px 18px 18px; display:flex; flex-direction:column; gap:9px}
+.b.factb{background:var(--fact-soft)}
+.b.inferb{background:transparent; border-left:1px solid var(--rule)}
+@media(max-width:760px){.b.inferb{border-left:0; border-top:1px solid var(--rule)}}
+.b .blab{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+}
+.b.factb .blab{color:var(--fact)}
+.b.inferb .blab{color:var(--ink-3)}
+.b p{margin:0; font-size:14.5px; line-height:1.55}
+.b.factb p{color:var(--ink)}
+.b.inferb p{color:var(--ink-2)}
+blockquote{
+  margin:2px 0 0; padding:10px 14px; border-left:2px solid var(--signal); background:var(--signal-soft);
+  font-family:Newsreader,Georgia,serif; font-size:16px; font-style:italic; line-height:1.45; color:var(--ink);
+}
+blockquote cite{display:block; margin-top:6px; font:400 11px/1.4 "IBM Plex Mono",monospace; font-style:normal; color:var(--ink-3)}
+.meter{display:flex; align-items:center; gap:8px; margin-top:auto; padding-top:6px}
+.meter .track{flex:1; height:4px; background:var(--rule); border-radius:2px; overflow:hidden}
+.meter .fill{height:100%; border-radius:2px}
+.b.factb .fill{background:var(--fact)}
+.b.inferb .fill{background:var(--ink-3)}
+.meter .val{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-3); min-width:30px; text-align:right}
+.claim{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--signal); background:var(--signal-soft); padding:7px 10px; border-radius:2px}
+.card-foot{padding:11px 18px; border-top:1px solid var(--rule); display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.tag{font-family:"IBM Plex Mono",monospace; font-size:11px; padding:3px 7px; border-radius:2px; background:var(--sunk); color:var(--ink-2)}
+.tag.layer{background:transparent; border:1px solid var(--rule-2); color:var(--ink-3)}
+.card-foot a{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--fact); text-decoration:none; border-bottom:1px solid transparent}
+.card-foot a:hover{border-bottom-color:var(--fact)}
+.rel{padding:11px 18px; border-top:1px solid var(--rule); font-size:13.5px; color:var(--ink-2)}
+.rel b{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); font-weight:500; display:block; margin-bottom:3px}
+.rel.none{color:var(--ink-3); font-style:italic}
+.empty{padding:40px; text-align:center; color:var(--ink-3); border:1px dashed var(--rule-2); border-radius:3px}
+footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); font-size:12.5px; display:flex; flex-direction:column; gap:6px}
+</style>
+<script id="payload" type="application/json">{}</script>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">
+    <span>ONE THERA INTELLIGENCE</span>
+    <span id="asof"></span>
+    <span>자율 수집 · 일간 + 주간</span>
+  </div>
+  <h1>지금까지 모인 것,<br>그리고 아직 비어 있는 곳</h1>
+  <p>모든 자료는 원자 단위로 분해되어 <b>변하지 않는 욕구(drive)</b>와 <b>출처 신뢰도(tier)</b>로 색인된다.
+     각 카드는 <b>관찰된 사실</b>과 <b>우리의 해석</b>을 두 칸으로 나눠 보여준다 — 이 경계가 무너지면 시스템 전체가 무의미해진다.</p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section>
+  <div class="sechead">
+    <h2>커버리지</h2>
+    <span class="note">많이 쌓인 곳이 아니라 <b>비어 있는 곳</b>이 다음 수집의 대상이다. 빈 칸이 곧 할 일이다.</span>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th style="min-width:190px">Human Drive — 왜 원하는가</th>
+        <th class="cell-n">n</th>
+        <th>T1 공식</th><th>T2 리서치</th><th>T3 업계</th><th>T4 소비자</th>
+        <th>교차 산업</th><th>최근</th>
+      </tr></thead>
+      <tbody id="cov"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>다음에 무엇을 볼 것인가</h2>
+    <span class="note">사람이 주제를 정하면 이미 관심 있는 것만 보게 된다. 결핍이 정한다.</span>
+  </div>
+  <div class="agenda" id="agenda"></div>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>수렴</h2>
+    <span class="note">같은 drive가 여러 출처·여러 Tier·여러 산업에서 반복되면 트렌드가 아니라 구조다. 네 관문을 모두 통과해야 기회가 된다.</span>
+  </div>
+  <div class="clusters" id="clusters"></div>
+</section>
+
+<section id="cases-sec" hidden>
+  <div class="sechead">
+    <h2>주간 심층 케이스</h2>
+    <span class="note">매주 금요일, 결핍이 가장 큰 drive 하나를 골라 끝까지 판정한다. <b>VERDICT</b>와 함께 <b>찾지 못한 것</b>을 같이 남긴다.</span>
+  </div>
+  <div class="cases" id="cases"></div>
+</section>
+
+<section>
+  <div class="sechead">
+    <h2>수집된 인사이트</h2>
+    <span class="note" id="count"></span>
+  </div>
+  <div class="filters" id="fdrive"><span class="lab">Drive</span></div>
+  <div class="filters" id="ftier"><span class="lab">Tier</span></div>
+  <div class="cards" id="cards"></div>
+</section>
+
+<footer>
+  <div>ONE THERA INTELLIGENCE · <span class="mono">data/insights/*.jsonl</span> 스냅샷</div>
+  <div>모든 레코드는 <span class="mono">verification_status</span>가 <span class="mono">unverified</span>다 — 원문 직접 확인 전에는 근거로 인용하지 않는다.</div>
+</footer>
+</div>
+
+<script>
+const D = JSON.parse(document.getElementById("payload").textContent);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TIERNAME = {1:"공식·1차", 2:"리서치", 3:"업계", 4:"소비자 신호"};
+
+/* masthead ---------------------------------------------------------- */
+const R = D.insights;
+const srcs = new Set(R.map(r => r.source.name));
+const tierCount = t => R.filter(r => r.source.tier === t).length;
+document.getElementById("asof").textContent = "기준 " + D.coverage.horizon;
+document.getElementById("stats").innerHTML = [
+  [R.length, "atomic insights"],
+  [srcs.size, "독립 출처"],
+  [tierCount(1) + tierCount(2), "사실 근거 (T1–2)"],
+  [tierCount(4), "소비자 원문 (T4)"],
+  [Object.values(D.clusters).filter(c => c.gate_passed).length, "게이트 통과"],
+  [D.coverage.unverified.length, "미검증"],
+].map(([n, l]) => `<div class="stat"><b>${n}</b><span>${esc(l)}</span></div>`).join("");
+
+/* coverage ---------------------------------------------------------- */
+document.getElementById("cov").innerHTML = Object.entries(D.coverage.by_drive).map(([drive, r]) => {
+  const pip = t => `<td><span class="pip ${r.tiers[t] ? "t"+t : "zero"}">${r.tiers[t] || "·"}</span></td>`;
+  return `<tr class="${r.n ? "" : "blank"}">
+    <td><span class="drive-name">${esc(drive)}</span><span class="drive-def">${esc(D.drive_defs[drive] || "")}</span></td>
+    <td class="cell-n">${r.n || "—"}</td>
+    ${pip(1)}${pip(2)}${pip(3)}${pip(4)}
+    <td class="inds">${r.industries.length ? esc(r.industries.join(" · ")) : "—"}</td>
+    <td class="mono" style="font-size:12px">${r.age_days === null ? "—" : r.age_days + "d"}</td>
+  </tr>`;
+}).join("");
+
+/* agenda ------------------------------------------------------------ */
+document.getElementById("agenda").innerHTML = D.coverage.gaps.slice(0, 8).map(g => {
+  const p = g.priority >= 90 ? "hi" : g.priority >= 70 ? "mid" : "low";
+  return `<div class="gap" data-p="${p}">
+    <span class="pri">${g.priority}</span>
+    <span class="kind">${esc(g.kind)}</span>
+    <span class="txt">${esc(g.instruction)}</span>
+  </div>`;
+}).join("");
+
+/* clusters ---------------------------------------------------------- */
+const GATE_LABEL = {
+  "G1_independent_sources>=3": "G1 독립출처 ≥3",
+  "G2_distinct_tiers>=2": "G2 Tier ≥2",
+  "G3_fact_base": "G3 사실 근거",
+  "G4_consumer_voice": "G4 소비자 목소리",
+};
+document.getElementById("clusters").innerHTML = Object.entries(D.clusters)
+  .sort((a, b) => b[1].signal_strength - a[1].signal_strength)
+  .map(([k, c]) => {
+    const failed = Object.entries(c.gates).filter(([, ok]) => !ok).map(([g]) => GATE_LABEL[g]);
+    return `<article class="cluster">
+      <h3>${esc(k)}</h3>
+      <div class="score"><b>${c.signal_strength}</b><span class="band">${esc(c.band)}</span>
+        ${c.structural ? '<span class="band" style="color:var(--fact)">구조적</span>' : ""}</div>
+      <div class="gates">${Object.entries(c.gates).map(([g, ok]) =>
+        `<span class="gate ${ok ? "pass" : "fail"}">${ok ? "✓" : "✕"} ${GATE_LABEL[g]}</span>`).join("")}</div>
+      <div class="verdict ${c.gate_passed ? "" : "blocked"}">
+        ${c.gate_passed
+          ? `기회 점수 <b class="mono">${c.opportunity_score}</b> · 자산 적합 ${c.asset_fit} · 화이트스페이스 ${c.white_space}`
+          : `<b>${esc(failed.join(", "))}</b>에서 막혔다. 통과하기 전에는 기회 카드를 쓰지 않는다.`}
+      </div>
+      <div class="mono" style="font-size:11.5px;color:var(--ink-3)">
+        인사이트 ${c.n_insights} · 출처 ${c.sources.length} · Tier ${c.tiers.join("·")}${c.industries.length ? " · 산업 " + c.industries.length : ""}
+      </div>
+    </article>`;
+  }).join("");
+
+/* weekly cases ------------------------------------------------------ */
+const CASES = D.cases || [];
+if (CASES.length) {
+  document.getElementById("cases-sec").hidden = false;
+  const bare = s => String(s ?? "").replace(/`/g, "");
+  document.getElementById("cases").innerHTML = CASES.map(c => {
+    const title = bare(c.title).replace(/^CASE\s+\d{4}-\d{2}-\d{2}:\s*/, "");
+    const verdict = bare(c.verdict).split("\u2014")[0].trim();
+    return `<a class="case" href="${esc(c.url)}" target="_blank" rel="noopener">
+      <span class="d">${esc(c.date)}</span>
+      <span><span class="t">${esc(title)}</span><span class="f">${esc(bare(c.focus))}</span></span>
+      <span class="v">${esc(verdict)}</span>
+    </a>`;
+  }).join("");
+}
+
+/* insight cards ----------------------------------------------------- */
+let fD = "all", fT = "all";
+const drives = [...new Set(R.flatMap(r => r.human_drive))].sort();
+const mkChips = (el, opts, cur, on) => {
+  el.querySelectorAll("button").forEach(b => b.remove());
+  [["all", "전체"], ...opts].forEach(([v, l]) => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = l;
+    b.setAttribute("aria-pressed", String(cur === v));
+    b.onclick = () => on(v);
+    el.appendChild(b);
+  });
+};
+const LAYERS = [
+  ["psychological_mechanism", "심리"], ["behavioral_trigger", "방아쇠"],
+  ["trust_mechanism", "신뢰"], ["desired_outcome", "도달 상태"],
+];
+
+function render() {
+  const list = R.filter(r =>
+    (fD === "all" || r.human_drive.includes(fD)) &&
+    (fT === "all" || String(r.source.tier) === fT))
+    .sort((a, b) => a.source.tier - b.source.tier || b.confidence - a.confidence);
+
+  document.getElementById("count").textContent =
+    `${list.length}건 표시 중 · 신뢰도 높은 순 (Tier 1 → 4). 낮은 Tier도 숨기지 않는다.`;
+
+  document.getElementById("cards").innerHTML = list.length ? list.map(r => {
+    const t = r.source.tier;
+    const layers = LAYERS.flatMap(([f, l]) => (r[f] || []).map(v => `<span class="tag layer">${l} · ${esc(v)}</span>`));
+    const url = r.source.url || r.source.document || "";
+    return `<article class="card" data-tier="${t}">
+      <div class="card-top">
+        <span class="tier">T${t} ${esc(TIERNAME[t])}</span>
+        <span class="src">${esc(r.source.name)}</span>
+        <span class="id">${esc(r.id)}</span>
+        ${r.verification_status !== "verified" ? `<span class="unver">⚠ ${esc(r.verification_status)}</span>` : ""}
+        <span class="spacer"></span>
+        <span class="drive">drive · ${esc(r.human_drive.join(", "))} → ${esc((r.desired_outcome || []).join(", "))}</span>
+      </div>
+      <div class="bands">
+        <div class="b factb">
+          <span class="blab">Fact — 자료가 말한 것</span>
+          <p>${esc(r.observation)}</p>
+          ${r.verbatim ? `<blockquote>“${esc(r.verbatim)}”<cite>${esc(r.platform || "")}${r.n_observed ? " · n≈" + r.n_observed : ""}${r.window ? " · " + esc(r.window) : ""}</cite></blockquote>` : ""}
+          ${r.quoted_claim ? `<div class="claim">인용 수치 (사실로 승격 금지) — ${esc(r.quoted_claim)}</div>` : ""}
+          <div class="meter"><span class="track"><span class="fill" style="width:${r.confidence * 100}%"></span></span><span class="val">${r.confidence.toFixed(2)}</span></div>
+        </div>
+        <div class="b inferb">
+          <span class="blab">Infer — 우리가 읽어낸 것</span>
+          <p>${esc(r.consumer_behavior)}</p>
+          <div class="meter"><span class="track"><span class="fill" style="width:${(r.inference_strength ?? 0) * 100}%"></span></span><span class="val">${(r.inference_strength ?? 0).toFixed(2)}</span></div>
+        </div>
+      </div>
+      <div class="rel ${r.onethera_relevance === "none" ? "none" : ""}">
+        <b>OneThera 접점</b>${r.onethera_relevance === "none" ? "없음 — 억지로 연결하지 않는다" : esc(r.onethera_relevance)}
+      </div>
+      <div class="card-foot">
+        ${(r.tags || []).map(x => `<span class="tag">${esc(x)}</span>`).join("")}
+        ${layers.join("")}
+        ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">출처 ↗</a>` : ""}
+      </div>
+    </article>`;
+  }).join("") : `<div class="empty">이 조건에 해당하는 인사이트가 없습니다.</div>`;
+}
+
+function bindDrive() {
+  mkChips(document.getElementById("fdrive"), drives.map(d => [d, d]), fD, v => { fD = v; bindDrive(); render(); });
+}
+function bindTier() {
+  const opts = [1, 2, 3, 4].filter(t => tierCount(t)).map(t => [String(t), `T${t} ${TIERNAME[t]}`]);
+  mkChips(document.getElementById("ftier"), opts, fT, v => { fT = v; bindTier(); render(); });
+}
+bindDrive(); bindTier(); render();
+</script>
+
+</body></html>
