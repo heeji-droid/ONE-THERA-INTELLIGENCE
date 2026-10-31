@@ -1,0 +1,33 @@
+name: validate insights
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema
+
+      # 통제 어휘를 고치고 스키마를 재생성하지 않으면 둘이 어긋난다.
+      - name: Schema is in sync with vocabularies
+        run: |
+          python3 tools/gen_schema.py
+          git diff --exit-code schema/atomic_insight.schema.json \
+            || { echo "::error::schema/atomic_insight.schema.json is stale — run 'make schema' and commit the result"; exit 1; }
+
+      - name: Validate every insight
+        run: python3 tools/validate.py 'data/insights/*.jsonl'
+
+      # 정보용 — 실패시키지 않는다. 게이트 미통과는 오류가 아니라 상태다.
+      - name: Convergence report
+        run: python3 tools/converge.py 'data/insights/*.jsonl' >> "$GITHUB_STEP_SUMMARY"
