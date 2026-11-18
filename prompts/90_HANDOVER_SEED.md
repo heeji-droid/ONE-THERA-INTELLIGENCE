@@ -13,6 +13,15 @@
    ① `create_session` ② **새 데스크가 `docs/DESK_LOG.md` 행을 스스로 커밋·푸시한 것을 확인**
    ③ **그 다음에** 트리거 이동(신규 생성 → 구 데스크를 `[종료 YYYY-MM-DD]`로 비활성)
    ④ **이전 데스크는 지우지 않고 폴백으로 남긴다.**
+
+   ★ **①에서 `source_url`과 `source_revision`을 반드시 넘긴다.**
+   `source_url: https://github.com/heeji-droid/ONE-THERA-INTELLIGENCE`
+   `source_revision: claude/thera-intelligence-framework-mv9hn9`
+   빠뜨리면 레포가 붙지 않고 세션에 **`config:no-git-repo` 태그**가 생기며, 그 데스크는
+   `git pull`을 못 하고 레포를 찾아 헤맨다(2026-11-18에 실제로 그랬다).
+   **생성 직후 응답의 `session_context.sources`에 git_repository가 있는지 확인하고,
+   없으면 그 세션을 아카이브하고 다시 만든다.** ②를 지켰기 때문에 그 실수가 쌌다 —
+   **트리거는 아직 옮기지 않은 상태였다.**
 3. 교체일 선택: **임계(`autocompact_state.threshold`)를 넘는 날이 아니라 여유가 있는 날**을 고른다.
    **금요일 주간은 데일리보다 무겁다** — 금요일 하루 전에 교체하면 ②가 실패할 때 쓸 여유가 없다.
    **증분은 점이 하나면 값만 적고, 둘 이상이면 방향이 아니라 범위를 적는다**(2026-11-10 규율).
