@@ -54,8 +54,14 @@
   데스크 VI가 그 순서를 어겨 이미 판 곳을 다시 팠다).
 
 둘 다: `python3 tools/validate.py 'data/insights/*.jsonl'` 통과 → 커밋 → push.
-`coverage.py`·`converge.py`는 **files 인자 필수**이고 **`--top` 기본값 6은 `pleasure_relief`를 가린다** —
-`--top 10`으로 쓴다.
+
+도구의 사실은 **한 문장에 묶지 않는다** — 묶으면 맞는 쪽이 틀린 쪽을 업어서 통째로 옳아 보인다
+(데스크 VIII이 2026-11-18에 이 자리에서 그 예를 찾았다).
+- **`coverage.py`**: `files` 인자 필수. **`--top` 기본값이 6이어서 `pleasure_relief`가 가려진다 —
+  `--top 10`으로 쓴다.**
+- **`converge.py`**: `files` 인자 필수. **`--top`을 받지 않는다** — 주면
+  `error: unrecognized arguments`로 실행되지 않는다. 받는 것은 `--by`·`--min-score`·`--min-members`·
+  `--json`·`--include-seeds`다. **인자 없이 일곱 클러스터를 전부 출력하므로 가리는 것이 없다.**
 
 ### 2. 지금 상태 {{ — 전부 그날 재서 채운다 }}
 
