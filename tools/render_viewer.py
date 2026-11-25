@@ -21,6 +21,27 @@ TEMPLATE = REPO / "viewer" / "desk.template.html"
 SLOT = re.compile(r'(<script id="payload"[^>]*>)(.*?)(</script>)', re.S)
 
 
+def build_stamp() -> str:
+    """발행본이 어느 저장소 상태에서 나왔는지 적는다.
+
+    뷰어 '버전'은 Artifact 서비스가 매기므로 저장소가 알 수 없고, 그래서
+    2026-11-24까지 처리 세션이 손으로 옮겼다(데스크 IX가 '검증할 수 없는 값'으로
+    보고했다). 이 각인은 그 번호를 대신하지 않는다 — 대신 **발행본 → 커밋**을
+    되짚을 수 있게 한다. 작업 트리가 더러우면 `+local` 을 붙인다: 처리 세션은
+    블록을 prepend 한 뒤 커밋 전에 렌더하므로, 평상시 값이 `<sha>+local` 이고
+    그 sha 는 블록을 담은 커밋의 **부모**다. 그 사실을 숨기지 않는다.
+    """
+    def git(*a: str) -> str:
+        return subprocess.run(["git", *a], cwd=REPO, capture_output=True,
+                              text=True, check=True).stdout.strip()
+    try:
+        sha = git("rev-parse", "--short", "HEAD")
+        dirty = bool(git("status", "--porcelain"))
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "unknown"
+    return f"{sha}+local" if dirty else sha
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("-o", "--out", default="desk.html")
@@ -48,11 +69,16 @@ def main() -> int:
     if not m:
         raise SystemExit(f"{TEMPLATE} 에 <script id=\"payload\"> 가 없다")
 
+    stamp = build_stamp()
+    if "__BUILD__" not in html:
+        raise SystemExit(f"{TEMPLATE} 에 __BUILD__ 자리가 없다")
+    html = html.replace("__BUILD__", stamp)
+
     out = pathlib.Path(args.out)
     out.write_text(html[:m.end(1)] + payload + html[m.start(3):], encoding="utf-8")
     d = json.loads(payload)
     print(f"{out} · {len(d['insights'])} insights · {d['coverage']['horizon']} · "
-          f"{len(d.get('cases', []))} cases")
+          f"{len(d.get('cases', []))} cases · build {stamp}")
     return 0
 
 
